@@ -65,6 +65,7 @@ label.l{display:block;font-size:12px;color:var(--mu);margin:0 0 4px 2px}
     <div class="md:col-span-2"><label class="l">Nombre del producto</label><input class="inp" id="p-name" required maxlength="60"></div>
     <div><label class="l">Precio de compra (costo)</label><input class="inp" id="p-cost" type="number" step="0.01" min="0" required inputmode="decimal"></div>
     <div><label class="l">Precio de venta</label><input class="inp" id="p-price" type="number" step="0.01" min="0" required inputmode="decimal"></div>
+    <div><label class="l">Unidades que trae (stock)</label><input class="inp" id="p-qty" type="number" min="0" step="1" value="1" required inputmode="numeric"></div>
     <div><label class="l">Imagen: subir desde el dispositivo</label><input class="inp" id="p-file" type="file" accept="image/*"></div>
     <div><label class="l">…o pegar URL de imagen</label><input class="inp" id="p-url" type="url" placeholder="https://"></div>
     <div class="md:col-span-2 flex items-center gap-4 flex-wrap">
@@ -158,12 +159,13 @@ $('p-file').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return
 function pReset(){$('pForm').reset();$('p-id').value='';img='';$('pTitle').textContent='Nuevo producto';$('pCancel').hidden=true;pPreview()}
 $('pCancel').onclick=pReset;
 $('pForm').addEventListener('submit',e=>{e.preventDefault();const id=$('p-id').value,old=S.products.find(p=>p.id===id);
-  const p={id:id||uid(),name:$('p-name').value.trim(),cost:+$('p-cost').value,price:+$('p-price').value,img:img||$('p-url').value.trim()||(old&&!$('p-url').value?old.img:'')||''};
+  const p={id:id||uid(),name:$('p-name').value.trim(),cost:+$('p-cost').value,price:+$('p-price').value,qty:Math.max(0,Math.floor(+$('p-qty').value||0)),img:img||$('p-url').value.trim()||(old&&!$('p-url').value?old.img:'')||''};
   if(old)Object.assign(old,p);else S.products.unshift(p);save();pReset();render();toast(old?'Producto actualizado':'Producto guardado')});
-function drawInv(){const P=S.products,tc=P.reduce((a,p)=>a+p.cost,0),tv=P.reduce((a,p)=>a+p.price,0);
-  $('invTot').innerHTML=[['Productos',P.length,''],['Costo total',money(tc),''],['Valor de venta',money(tv),'ac'],['Ganancia estimada',money(tv-tc),'pos']].map(x=>`<div class="card p-4"><div class="text-xs mu">${x[0]}</div><div class="text-xl font-medium mt-1 ${x[2]==='pos'?'pos':''}" ${x[2]==='ac'?'style="color:var(--ac)"':''}>${x[1]}</div></div>`).join('');
+function drawInv(){const P=S.products,u=p=>p.qty??1,tc=P.reduce((a,p)=>a+p.cost*u(p),0),tv=P.reduce((a,p)=>a+p.price*u(p),0),un=P.reduce((a,p)=>a+(p.qty??0),0);
+  $('invTot').innerHTML=[['Productos · unidades',P.length+' · '+un,''],['Inversión en stock',money(tc),''],['Valor de venta total',money(tv),'ac'],['Ganancia estimada',money(tv-tc),'pos']].map(x=>`<div class="card p-4"><div class="text-xs mu">${x[0]}</div><div class="text-xl font-medium mt-1 ${x[2]==='pos'?'pos':''}" ${x[2]==='ac'?'style="color:var(--ac)"':''}>${x[1]}</div></div>`).join('');
   $('pList').innerHTML=P.length?P.map(p=>{const d=pd(p);return `<div class="card overflow-hidden"><img src="${esc(p.img)||PH}" onerror="this.onerror=null;this.src='${PH}'" class="w-full h-40 object-cover" style="background:var(--s2)" alt="">
   <div class="p-4"><div class="font-medium truncate">${esc(p.name)}</div>
+  <div class="text-xs mt-1 ${p.qty===0?'neg':'mu'}">📦 ${p.qty==null?'Stock sin definir':p.qty===0?'Agotado':p.qty+(p.qty===1?' unidad':' unidades')}${p.qty?` · Ganancia del lote <b class="pos">${money(d.g*p.qty)}</b>`:''}</div>
   <div class="grid grid-cols-2 gap-2 text-sm mt-2"><div><div class="text-xs mu">Costo</div>${money(p.cost)}</div><div><div class="text-xs mu">Venta</div><span style="color:var(--ac)">${money(p.price)}</span></div>
   <div><div class="text-xs mu">Ganancia</div><b class="${d.g>=0?'pos':'neg'}">${money(d.g)}</b></div><div><div class="text-xs mu">Margen</div>${pct(d.pc)} <span class="mu text-xs">(${pct(d.mg)})</span></div></div>
   <div class="flex gap-2 mt-3"><button class="btn2" data-a="pe" data-id="${p.id}">Editar</button><button class="btn2 red" data-a="pd" data-id="${p.id}">Eliminar</button></div></div></div>`}).join(''):'<div class="mu text-sm col-span-full">Aún no hay productos. Registra el primero arriba.</div>'}
@@ -177,10 +179,10 @@ function drawSum(){const t=today(),mo=t.slice(0,7),sd=S.sales.filter(s=>s.date==
 /* VENTAS */
 function vPreview(){const p=S.products.find(x=>x.id===$('v-prod').value),q=+$('v-qty').value||0;$('v-tot').textContent=money(p?p.price*q:0);$('v-gan').textContent=money(p?(p.price-p.cost)*q:0)}
 ['v-prod','v-qty'].forEach(i=>$(i).addEventListener('input',vPreview));
-$('vForm').addEventListener('submit',e=>{e.preventDefault();const p=S.products.find(x=>x.id===$('v-prod').value);if(!p)return toast('Primero registra un producto');
+$('vForm').addEventListener('submit',e=>{e.preventDefault();const p=S.products.find(x=>x.id===$('v-prod').value);if(!p)return toast('Primero registra un producto');if(p.qty!=null&&+$('v-qty').value>p.qty)return toast(p.qty?'Solo quedan '+p.qty+' unidades':'Producto agotado: actualiza sus unidades');
   S.sales.unshift({id:uid(),pid:p.id,name:p.name,qty:+$('v-qty').value,price:p.price,cost:p.cost,date:$('v-date').value,client:$('v-client').value.trim()});
-  save();$('v-qty').value=1;$('v-client').value='';render();toast('Venta registrada')});
-function drawVen(){const sel=$('v-prod'),cur=sel.value;sel.innerHTML=S.products.length?S.products.map(p=>`<option value="${p.id}">${esc(p.name)} — ${money(p.price)}</option>`).join(''):'<option value="">Sin productos registrados</option>';if(cur)sel.value=cur;vPreview();
+  if(p.qty!=null)p.qty-=+$('v-qty').value;save();$('v-qty').value=1;$('v-client').value='';render();toast('Venta registrada')});
+function drawVen(){const sel=$('v-prod'),cur=sel.value;sel.innerHTML=S.products.length?S.products.map(p=>`<option value="${p.id}">${esc(p.name)} — ${money(p.price)}${p.qty==null?'':' ('+p.qty+' disp.)'}</option>`).join(''):'<option value="">Sin productos registrados</option>';if(cur)sel.value=cur;vPreview();
   $('vList').innerHTML=S.sales.length?[...S.sales].sort((a,b)=>b.date.localeCompare(a.date)).map(s=>`<div class="card p-3 flex items-center gap-3"><div class="flex-1 min-w-0"><div class="font-medium truncate">${esc(s.name)} <span class="mu">× ${s.qty}</span></div><div class="text-xs mu">${esc(s.date)} · ${esc(s.client)||'Sin cliente'}</div></div><div class="text-right"><div>${money(s.price*s.qty)}</div><div class="text-xs pos">+${money((s.price-s.cost)*s.qty)}</div></div><button class="btn2 red" data-a="vd" data-id="${s.id}">✕</button></div>`).join(''):'<div class="mu text-sm">Sin ventas registradas.</div>'}
 
 /* DEUDAS */
@@ -203,12 +205,12 @@ function calc(){const c=+$('c-cost').value||0,v=+$('c-val').value||0,q=Math.max(
 
 /* Acciones */
 document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b)return;const id=b.dataset.id,a=b.dataset.a;
-  if(a==='pe'){const p=S.products.find(x=>x.id===id);$('p-id').value=id;$('p-name').value=p.name;$('p-cost').value=p.cost;$('p-price').value=p.price;img=p.img&&p.img.startsWith('data:')?p.img:'';$('p-url').value=img?'':(p.img||'');$('pTitle').textContent='Editar producto';$('pCancel').hidden=false;pPreview();if(!img&&p.img)$('p-prev').src=p.img;scrollTo({top:0,behavior:'smooth'});return}
+  if(a==='pe'){const p=S.products.find(x=>x.id===id);$('p-id').value=id;$('p-name').value=p.name;$('p-cost').value=p.cost;$('p-price').value=p.price;$('p-qty').value=p.qty??0;img=p.img&&p.img.startsWith('data:')?p.img:'';$('p-url').value=img?'':(p.img||'');$('pTitle').textContent='Editar producto';$('pCancel').hidden=false;pPreview();if(!img&&p.img)$('p-prev').src=p.img;scrollTo({top:0,behavior:'smooth'});return}
   if(a==='da'){const i=$('ab-'+id),v=+i.value;if(!(v>0))return toast('Ingresa un monto de abono');const d=S.debts.find(x=>x.id===id);d.paid+=v;if(d.paid>=d.amount){d.paid=d.amount;d.status='Pagado'}save();render();toast('Abono registrado');return}
   if(a==='dp'){const d=S.debts.find(x=>x.id===id);d.paid=d.amount;d.status='Pagado';save();render();toast('Deuda marcada como pagada');return}
   if(!armed(b))return;
   if(a==='pd')S.products=S.products.filter(x=>x.id!==id);
-  if(a==='vd')S.sales=S.sales.filter(x=>x.id!==id);
+  if(a==='vd'){const s=S.sales.find(x=>x.id===id),pr=s&&S.products.find(x=>x.id===s.pid);if(pr&&pr.qty!=null)pr.qty+=s.qty;S.sales=S.sales.filter(x=>x.id!==id)}
   if(a==='dd')S.debts=S.debts.filter(x=>x.id!==id);
   save();render()});
 
