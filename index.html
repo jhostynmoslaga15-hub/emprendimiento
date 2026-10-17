@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mi Emprendimiento · Gestión</title>
+<style>
+:root{color-scheme:dark;--bg:#121212;--s1:#1E1E1E;--s2:#2D2D2D;--tx:#E8EAED;--mu:#9AA0A6;--ac:#8AB4F8;--gr:#81C995;--rd:#F28B82;--bd:#3C4043;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{background:var(--bg);color:var(--tx);font-family:Roboto,Inter,system-ui,sans-serif;margin:0}
+.card{background:var(--s1);border:1px solid var(--bd);border-radius:16px}
+.inp{width:100%;background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:10px 12px;color:var(--tx);font-size:15px;outline:none}
+.inp:focus{border-color:var(--ac)}
+label.l{display:block;font-size:12px;color:var(--mu);margin:0 0 4px 2px}
+.btn{background:var(--ac);color:#0b1b33;border:0;border-radius:999px;padding:10px 18px;font-weight:500;cursor:pointer;font-size:14px}
+.btn:hover{filter:brightness(1.1)}
+.btn2{background:transparent;color:var(--ac);border:1px solid var(--bd);border-radius:999px;padding:7px 14px;cursor:pointer;font-size:13px}
+.btn2:hover{background:var(--s2)}
+.btn2.red{color:var(--rd)}
+.nav{display:flex;align-items:center;gap:12px;padding:11px 16px;border-radius:999px;color:var(--mu);cursor:pointer;border:0;background:none;font-size:15px;width:100%}
+.nav.on{background:#2b3a55;color:var(--ac)}
+.pos{color:var(--gr)}.neg{color:var(--rd)}.mu{color:var(--mu)}
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--s1);border-top:1px solid var(--bd);padding-bottom:env(safe-area-inset-bottom,0px);display:flex;z-index:20}
+.bar .nav{flex-direction:column;gap:2px;font-size:11px;border-radius:12px;padding:8px 4px;justify-content:center}
+.seg{display:flex;background:var(--s2);border-radius:999px;padding:3px}
+.seg button{flex:1;border:0;background:none;color:var(--mu);padding:8px;border-radius:999px;cursor:pointer;font-size:14px}
+.seg button.on{background:var(--ac);color:#0b1b33}
+.prog{height:6px;background:var(--s2);border-radius:9px;overflow:hidden}.prog i{display:block;height:100%;background:var(--gr)}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:90px;background:#e8eaed;color:#202124;padding:10px 18px;border-radius:10px;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:50}
+#toast.show{opacity:1}
+
+*,::before,::after{box-sizing:border-box}img{display:block;max-width:100%}h1,h2{margin:0;font-size:inherit;font-weight:inherit}button,input,select{font-family:inherit}[hidden]{display:none!important}
+.hidden{display:none}.flex{display:flex}.grid{display:grid}.fixed{position:fixed}.top-0{top:0}.left-0{left:0}.bottom-0{bottom:0}
+.w-60{width:15rem}.w-16{width:4rem}.h-16{height:4rem}.h-40{height:10rem}.w-full{width:100%}.h-fit{height:fit-content}
+.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.flex-1{flex:1 1 0%}.min-w-0{min-width:0}.min-w-\[160px\]{min-width:160px}
+.gap-1{gap:.25rem}.gap-2{gap:.5rem}.gap-3{gap:.75rem}.gap-4{gap:1rem}
+.p-3{padding:.75rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.px-3{padding-left:.75rem;padding-right:.75rem}.py-1{padding-top:.25rem;padding-bottom:.25rem}.py-4{padding-top:1rem;padding-bottom:1rem}.pb-2{padding-bottom:.5rem}.pb-28{padding-bottom:7rem}
+.mb-2{margin-bottom:.5rem}.mb-4{margin-bottom:1rem}.mb-5{margin-bottom:1.25rem}.mb-6{margin-bottom:1.5rem}.mt-1{margin-top:.25rem}.mt-2{margin-top:.5rem}.mt-3{margin-top:.75rem}.ml-auto{margin-left:auto}
+.text-xs{font-size:.75rem}.text-sm{font-size:.875rem}.text-lg{font-size:1.125rem}.text-xl{font-size:1.25rem}.text-2xl{font-size:1.5rem}.text-4xl{font-size:2.25rem}
+.font-medium{font-weight:500}.text-right{text-align:right}.items-center{align-items:center}.items-baseline{align-items:baseline}.justify-between{justify-content:space-between}.justify-center{justify-content:center}.content-start{align-content:start}
+.grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.rounded-xl{border-radius:.75rem}.rounded-full{border-radius:9999px}.object-cover{object-fit:cover}.overflow-hidden{overflow:hidden}
+.truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.border-b{border-bottom:1px solid}.opacity-70{opacity:.7}.col-span-full{grid-column:1/-1}.max-w-5xl{max-width:64rem}
+@media(min-width:640px){.sm\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(min-width:768px){.md\:flex{display:flex}.md\:hidden{display:none}.md\:ml-60{margin-left:15rem}.md\:p-8{padding:2rem}.md\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}.md\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.md\:col-span-2{grid-column:span 2/span 2}}
+@media(min-width:1024px){.lg\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}}
+</style>
+<link rel="manifest" href="manifest.json"><meta name="theme-color" content="#121212"><link rel="icon" href="icon.svg"><link rel="apple-touch-icon" href="icon.svg"><meta name="apple-mobile-web-app-capable" content="yes">
+</head>
+<body>
+<aside class="hidden md:flex fixed top-0 left-0 bottom-0 w-60 flex-col gap-1 p-4" style="background:var(--s1);border-right:1px solid var(--bd);padding-top:calc(16px + env(safe-area-inset-top,0px))">
+  <div class="px-3 py-4 mb-2"><div class="text-lg font-medium">🛍️ Mi Emprendimiento</div><div class="text-xs mu">Inventario · Ventas · Deudas</div></div>
+  <div id="navSide" class="flex flex-col gap-1"></div>
+</aside>
+<nav class="bar md:hidden" id="navBar"></nav>
+
+<main class="md:ml-60 p-4 md:p-8 pb-28 max-w-5xl">
+
+<!-- INVENTARIO -->
+<section id="s-inv" class="sec">
+  <h1 class="text-2xl font-medium mb-4">Inventario y productos</h1>
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5" id="invTot"></div>
+  <form id="pForm" class="card p-4 mb-6 grid gap-3 md:grid-cols-2" autocomplete="off">
+    <input type="hidden" id="p-id">
+    <div class="md:col-span-2 font-medium" id="pTitle">Nuevo producto</div>
+    <div class="md:col-span-2"><label class="l">Nombre del producto</label><input class="inp" id="p-name" required maxlength="60"></div>
+    <div><label class="l">Precio de compra (costo)</label><input class="inp" id="p-cost" type="number" step="0.01" min="0" required inputmode="decimal"></div>
+    <div><label class="l">Precio de venta</label><input class="inp" id="p-price" type="number" step="0.01" min="0" required inputmode="decimal"></div>
+    <div><label class="l">Imagen: subir desde el dispositivo</label><input class="inp" id="p-file" type="file" accept="image/*"></div>
+    <div><label class="l">…o pegar URL de imagen</label><input class="inp" id="p-url" type="url" placeholder="https://"></div>
+    <div class="md:col-span-2 flex items-center gap-4 flex-wrap">
+      <img id="p-prev" class="w-16 h-16 rounded-xl object-cover" style="background:var(--s2)" alt="">
+      <div class="text-sm flex-1 min-w-[160px]">Ganancia unitaria: <b id="p-g">$0.00</b><br><span class="mu">Margen: <span id="p-m">0%</span></span></div>
+      <button class="btn2" type="button" id="pCancel" hidden>Cancelar</button>
+      <button class="btn" type="submit">Guardar producto</button>
+    </div>
+  </form>
+  <div id="pList" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"></div>
+</section>
+
+<!-- VENTAS -->
+<section id="s-ven" class="sec" hidden>
+  <h1 class="text-2xl font-medium mb-4">Registro de ventas</h1>
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5 sumBox"></div>
+  <form id="vForm" class="card p-4 mb-6 grid gap-3 md:grid-cols-2" autocomplete="off">
+    <div class="md:col-span-2 font-medium">Nueva venta</div>
+    <div class="md:col-span-2"><label class="l">Producto</label><select class="inp" id="v-prod" required></select></div>
+    <div><label class="l">Cantidad vendida</label><input class="inp" id="v-qty" type="number" min="1" step="1" value="1" required inputmode="numeric"></div>
+    <div><label class="l">Fecha</label><input class="inp" id="v-date" type="date" required></div>
+    <div class="md:col-span-2"><label class="l">Cliente</label><input class="inp" id="v-client" maxlength="60" placeholder="Opcional"></div>
+    <div class="md:col-span-2 flex items-center justify-between gap-3 flex-wrap"><div class="text-sm">Total: <b id="v-tot">$0.00</b> · Ganancia: <b class="pos" id="v-gan">$0.00</b></div><button class="btn" type="submit">Registrar venta</button></div>
+  </form>
+  <h2 class="font-medium mb-2">Historial</h2>
+  <div id="vList" class="grid gap-2"></div>
+</section>
+
+<!-- DEUDAS -->
+<section id="s-deu" class="sec" hidden>
+  <h1 class="text-2xl font-medium mb-4">Cuentas por cobrar</h1>
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5 sumBox"></div>
+  <form id="dForm" class="card p-4 mb-6 grid gap-3 md:grid-cols-2" autocomplete="off">
+    <div class="md:col-span-2 font-medium">Nueva deuda</div>
+    <div><label class="l">Cliente</label><input class="inp" id="d-client" required maxlength="60"></div>
+    <div><label class="l">Concepto</label><input class="inp" id="d-concept" required maxlength="80"></div>
+    <div><label class="l">Monto</label><input class="inp" id="d-amount" type="number" step="0.01" min="0.01" required inputmode="decimal"></div>
+    <div><label class="l">Fecha</label><input class="inp" id="d-date" type="date" required></div>
+    <div class="md:col-span-2 text-right"><button class="btn" type="submit">Registrar deuda</button></div>
+  </form>
+  <div id="dList" class="grid gap-3 md:grid-cols-2"></div>
+</section>
+
+<!-- CALCULADORA -->
+<section id="s-cal" class="sec" hidden>
+  <h1 class="text-2xl font-medium mb-4">Calculadora de precios y márgenes</h1>
+  <div class="grid gap-4 md:grid-cols-2">
+    <div class="card p-4 grid gap-3 content-start">
+      <div><label class="l">Precio de compra (costo unitario)</label><input class="inp" id="c-cost" type="number" step="0.01" min="0" inputmode="decimal" placeholder="0.00"></div>
+      <div class="seg"><button type="button" id="c-m1" class="on">% de ganancia</button><button type="button" id="c-m2">Precio de venta</button></div>
+      <div><label class="l" id="c-vl">Porcentaje de ganancia deseado (%)</label><input class="inp" id="c-val" type="number" step="0.01" min="0" inputmode="decimal" placeholder="0"></div>
+      <div><label class="l">Cantidad de unidades</label><input class="inp" id="c-qty" type="number" min="1" step="1" value="1" inputmode="numeric"></div>
+    </div>
+    <div class="card p-5 grid gap-4 content-start" id="c-out"></div>
+  </div>
+</section>
+</main>
+<div id="toast"></div>
+
+<script>
+const K='gestor-emprendimiento-v1';
+let S={products:[],sales:[],debts:[]};
+try{const r=localStorage.getItem(K);if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money=n=>'$'+(Number(n)||0).toLocaleString('es',{minimumFractionDigits:2,maximumFractionDigits:2});
+const pct=n=>(isFinite(n)?n:0).toLocaleString('es',{maximumFractionDigits:1})+'%';
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const today=()=>new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
+const PH='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><rect width="120" height="120" fill="#2D2D2D"/><path d="M60 28l28 15v34L60 92 32 77V43z" fill="none" stroke="#9AA0A6" stroke-width="4" stroke-linejoin="round"/><path d="M32 43l28 15 28-15M60 58v34" fill="none" stroke="#9AA0A6" stroke-width="4"/></svg>');
+let tt;const toast=m=>{const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2200)};
+const save=()=>{try{localStorage.setItem(K,JSON.stringify(S))}catch(e){toast('No se pudo guardar: almacenamiento lleno o bloqueado')}};
+const pd=p=>{const g=p.price-p.cost;return{g,pc:p.cost>0?g/p.cost*100:0,mg:p.price>0?g/p.price*100:0}};
+
+/* Navegación */
+const TABS=[['inv','📦','Inventario'],['ven','🧾','Ventas'],['deu','💳','Deudas'],['cal','🧮','Calculadora']];
+let tab='inv';
+function drawNav(){const h=TABS.map(t=>`<button class="nav ${t[0]===tab?'on':''}" data-tab="${t[0]}"><span class="text-lg">${t[1]}</span><span>${t[2]}</span></button>`).join('');$('navSide').innerHTML=h;$('navBar').innerHTML=h.replace(/class="nav /g,'class="nav flex-1 ')}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-tab]');if(b){go(b.dataset.tab)}});
+function go(t){tab=t;document.querySelectorAll('.sec').forEach(s=>s.hidden=s.id!=='s-'+t);drawNav();render();scrollTo(0,0)}
+
+/* Confirmación en dos toques (sin diálogos del navegador) */
+function armed(b){if(b.dataset.arm){return true}b.dataset.arm=1;const o=b.textContent;b.textContent='¿Seguro?';setTimeout(()=>{delete b.dataset.arm;b.textContent=o},2500);return false}
+
+/* INVENTARIO */
+let img='';
+function pPreview(){const c=+$('p-cost').value||0,v=+$('p-price').value||0,g=v-c;$('p-g').textContent=money(g);$('p-g').className=g>=0?'pos':'neg';$('p-m').textContent=pct(c>0?g/c*100:0)+' sobre costo · '+pct(v>0?g/v*100:0)+' del precio';$('p-prev').src=img||$('p-url').value||PH}
+['p-cost','p-price','p-url'].forEach(i=>$(i).addEventListener('input',()=>{if(i==='p-url')img='';pPreview()}));
+$('p-prev').onerror=function(){this.src=PH};
+$('p-file').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const m=480,k=Math.min(1,m/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);img=c.toDataURL('image/jpeg',.72);$('p-url').value='';pPreview()};im.src=r.result};r.readAsDataURL(f)});
+function pReset(){$('pForm').reset();$('p-id').value='';img='';$('pTitle').textContent='Nuevo producto';$('pCancel').hidden=true;pPreview()}
+$('pCancel').onclick=pReset;
+$('pForm').addEventListener('submit',e=>{e.preventDefault();const id=$('p-id').value,old=S.products.find(p=>p.id===id);
+  const p={id:id||uid(),name:$('p-name').value.trim(),cost:+$('p-cost').value,price:+$('p-price').value,img:img||$('p-url').value.trim()||(old&&!$('p-url').value?old.img:'')||''};
+  if(old)Object.assign(old,p);else S.products.unshift(p);save();pReset();render();toast(old?'Producto actualizado':'Producto guardado')});
+function drawInv(){const P=S.products,tc=P.reduce((a,p)=>a+p.cost,0),tv=P.reduce((a,p)=>a+p.price,0);
+  $('invTot').innerHTML=[['Productos',P.length,''],['Costo total',money(tc),''],['Valor de venta',money(tv),'ac'],['Ganancia estimada',money(tv-tc),'pos']].map(x=>`<div class="card p-4"><div class="text-xs mu">${x[0]}</div><div class="text-xl font-medium mt-1 ${x[2]==='pos'?'pos':''}" ${x[2]==='ac'?'style="color:var(--ac)"':''}>${x[1]}</div></div>`).join('');
+  $('pList').innerHTML=P.length?P.map(p=>{const d=pd(p);return `<div class="card overflow-hidden"><img src="${esc(p.img)||PH}" onerror="this.onerror=null;this.src='${PH}'" class="w-full h-40 object-cover" style="background:var(--s2)" alt="">
+  <div class="p-4"><div class="font-medium truncate">${esc(p.name)}</div>
+  <div class="grid grid-cols-2 gap-2 text-sm mt-2"><div><div class="text-xs mu">Costo</div>${money(p.cost)}</div><div><div class="text-xs mu">Venta</div><span style="color:var(--ac)">${money(p.price)}</span></div>
+  <div><div class="text-xs mu">Ganancia</div><b class="${d.g>=0?'pos':'neg'}">${money(d.g)}</b></div><div><div class="text-xs mu">Margen</div>${pct(d.pc)} <span class="mu text-xs">(${pct(d.mg)})</span></div></div>
+  <div class="flex gap-2 mt-3"><button class="btn2" data-a="pe" data-id="${p.id}">Editar</button><button class="btn2 red" data-a="pd" data-id="${p.id}">Eliminar</button></div></div></div>`}).join(''):'<div class="mu text-sm col-span-full">Aún no hay productos. Registra el primero arriba.</div>'}
+
+/* RESUMEN (ventas y deudas) */
+const owed=d=>d.status==='Pagado'?0:Math.max(0,d.amount-d.paid);
+function drawSum(){const t=today(),mo=t.slice(0,7),sd=S.sales.filter(s=>s.date===t),sm=S.sales.filter(s=>s.date.startsWith(mo)),T=a=>a.reduce((x,s)=>x+s.price*s.qty,0),G=a=>a.reduce((x,s)=>x+(s.price-s.cost)*s.qty,0),D=S.debts.reduce((x,d)=>x+owed(d),0);
+  const h=[['Ventas de hoy',money(T(sd)),'pos'],['Ventas del mes',money(T(sm)),''],['Ganancia del mes',money(G(sm)),'pos'],['Deudas pendientes',money(D),'neg']].map(x=>`<div class="card p-4"><div class="text-xs mu">${x[0]}</div><div class="text-xl font-medium mt-1 ${x[2]}">${x[1]}</div></div>`).join('');
+  document.querySelectorAll('.sumBox').forEach(b=>b.innerHTML=h)}
+
+/* VENTAS */
+function vPreview(){const p=S.products.find(x=>x.id===$('v-prod').value),q=+$('v-qty').value||0;$('v-tot').textContent=money(p?p.price*q:0);$('v-gan').textContent=money(p?(p.price-p.cost)*q:0)}
+['v-prod','v-qty'].forEach(i=>$(i).addEventListener('input',vPreview));
+$('vForm').addEventListener('submit',e=>{e.preventDefault();const p=S.products.find(x=>x.id===$('v-prod').value);if(!p)return toast('Primero registra un producto');
+  S.sales.unshift({id:uid(),pid:p.id,name:p.name,qty:+$('v-qty').value,price:p.price,cost:p.cost,date:$('v-date').value,client:$('v-client').value.trim()});
+  save();$('v-qty').value=1;$('v-client').value='';render();toast('Venta registrada')});
+function drawVen(){const sel=$('v-prod'),cur=sel.value;sel.innerHTML=S.products.length?S.products.map(p=>`<option value="${p.id}">${esc(p.name)} — ${money(p.price)}</option>`).join(''):'<option value="">Sin productos registrados</option>';if(cur)sel.value=cur;vPreview();
+  $('vList').innerHTML=S.sales.length?[...S.sales].sort((a,b)=>b.date.localeCompare(a.date)).map(s=>`<div class="card p-3 flex items-center gap-3"><div class="flex-1 min-w-0"><div class="font-medium truncate">${esc(s.name)} <span class="mu">× ${s.qty}</span></div><div class="text-xs mu">${esc(s.date)} · ${esc(s.client)||'Sin cliente'}</div></div><div class="text-right"><div>${money(s.price*s.qty)}</div><div class="text-xs pos">+${money((s.price-s.cost)*s.qty)}</div></div><button class="btn2 red" data-a="vd" data-id="${s.id}">✕</button></div>`).join(''):'<div class="mu text-sm">Sin ventas registradas.</div>'}
+
+/* DEUDAS */
+$('dForm').addEventListener('submit',e=>{e.preventDefault();S.debts.unshift({id:uid(),client:$('d-client').value.trim(),concept:$('d-concept').value.trim(),amount:+$('d-amount').value,date:$('d-date').value,paid:0,status:'Pendiente'});save();$('dForm').reset();$('d-date').value=today();render();toast('Deuda registrada')});
+function drawDeu(){const L=[...S.debts].sort((a,b)=>(a.status==='Pagado')-(b.status==='Pagado')||b.date.localeCompare(a.date));
+  $('dList').innerHTML=L.length?L.map(d=>{const ok=d.status==='Pagado',r=owed(d);return `<div class="card p-4 ${ok?'opacity-70':''}"><div class="flex justify-between gap-2"><div class="min-w-0"><div class="font-medium truncate">${esc(d.client)}</div><div class="text-sm mu truncate">${esc(d.concept)} · ${esc(d.date)}</div></div><span class="text-xs px-3 py-1 rounded-full h-fit" style="background:${ok?'#1e3a2a':'#4a2a28'};color:${ok?'var(--gr)':'var(--rd)'}">${d.status}</span></div>
+  <div class="flex justify-between text-sm mt-3"><span class="mu">Monto ${money(d.amount)}</span><span class="mu">Abonado ${money(Math.min(d.paid,d.amount))}</span><b class="${ok?'pos':'neg'}">Resta ${money(r)}</b></div>
+  <div class="prog mt-2"><i style="width:${ok?100:Math.min(100,d.paid/d.amount*100)}%"></i></div>
+  <div class="flex gap-2 mt-3 flex-wrap items-center">${ok?'':`<input class="inp" style="width:100px" type="number" step="0.01" min="0.01" placeholder="Abono" id="ab-${d.id}" inputmode="decimal"><button class="btn2" data-a="da" data-id="${d.id}">Abonar</button><button class="btn2" data-a="dp" data-id="${d.id}">Marcar pagado</button>`}<button class="btn2 red ml-auto" data-a="dd" data-id="${d.id}">Eliminar</button></div></div>`}).join(''):'<div class="mu text-sm col-span-full">Sin deudas registradas.</div>'}
+
+/* CALCULADORA */
+let cm=1;
+function calc(){const c=+$('c-cost').value||0,v=+$('c-val').value||0,q=Math.max(1,+$('c-qty').value||1);let price=cm===1?c*(1+v/100):v,g=price-c;
+  const row=(a,b,cl='')=>`<div class="flex justify-between items-baseline border-b pb-2" style="border-color:var(--bd)"><span class="mu text-sm">${a}</span><span class="font-medium ${cl}">${b}</span></div>`;
+  $('c-out').innerHTML=`<div><div class="text-xs mu">Precio sugerido al público (unidad)</div><div class="text-4xl font-medium mt-1" style="color:var(--ac)">${money(price)}</div></div>`+
+  row('Ganancia por unidad',money(g),g>=0?'pos':'neg')+row('Ganancia sobre el costo',pct(c>0?g/c*100:0))+row('Margen sobre el precio',pct(price>0?g/price*100:0))+
+  row(`Total de venta × ${q}`,money(price*q))+row(`Inversión × ${q}`,money(c*q))+row(`Ganancia total × ${q}`,money(g*q),g>=0?'pos':'neg')}
+['c-cost','c-val','c-qty'].forEach(i=>$(i).addEventListener('input',calc));
+[1,2].forEach(n=>$('c-m'+n).onclick=()=>{cm=n;$('c-m1').className=n===1?'on':'';$('c-m2').className=n===2?'on':'';$('c-vl').textContent=n===1?'Porcentaje de ganancia deseado (%)':'Precio de venta deseado';calc()});
+
+/* Acciones */
+document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b)return;const id=b.dataset.id,a=b.dataset.a;
+  if(a==='pe'){const p=S.products.find(x=>x.id===id);$('p-id').value=id;$('p-name').value=p.name;$('p-cost').value=p.cost;$('p-price').value=p.price;img=p.img&&p.img.startsWith('data:')?p.img:'';$('p-url').value=img?'':(p.img||'');$('pTitle').textContent='Editar producto';$('pCancel').hidden=false;pPreview();if(!img&&p.img)$('p-prev').src=p.img;scrollTo({top:0,behavior:'smooth'});return}
+  if(a==='da'){const i=$('ab-'+id),v=+i.value;if(!(v>0))return toast('Ingresa un monto de abono');const d=S.debts.find(x=>x.id===id);d.paid+=v;if(d.paid>=d.amount){d.paid=d.amount;d.status='Pagado'}save();render();toast('Abono registrado');return}
+  if(a==='dp'){const d=S.debts.find(x=>x.id===id);d.paid=d.amount;d.status='Pagado';save();render();toast('Deuda marcada como pagada');return}
+  if(!armed(b))return;
+  if(a==='pd')S.products=S.products.filter(x=>x.id!==id);
+  if(a==='vd')S.sales=S.sales.filter(x=>x.id!==id);
+  if(a==='dd')S.debts=S.debts.filter(x=>x.id!==id);
+  save();render()});
+
+function render(){if(tab==='inv')drawInv();if(tab==='ven'){drawSum();drawVen()}if(tab==='deu'){drawSum();drawDeu()}if(tab==='cal')calc()}
+$('v-date').value=today();$('d-date').value=today();pPreview();go('inv');
+</script>
+<script>if('serviceWorker' in navigator&&location.protocol.startsWith('http')){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}</script>
+</body>
+</html>
